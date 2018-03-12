@@ -1,0 +1,84 @@
+=====TICKETMONSTER NOTES=====
+
+The initial project includes the following Java packages:
+.controller
+contains the backing beans for {newMember} and {memberRegistration} in the JSF page index.xhtml
+.data
+contains a class which uses @Produces and @Named to return the list of members for index.xhtml
+.model
+contains the JPA entity class, a POJO annotated with @Entity, annotated with Bean Validation (JSR 303) constraints
+.rest
+contains the JAX-RS endpoints, POJOs annotated with @Path
+.service
+handles the registration transaction for new members
+.util
+contains Resources.java which sets up an alias for @PersistenceContext to be injectable via @Inject
+
+ANNOTATIONS
+-you can leverage Forge to quicken the setup for entities and constraints
+-JPA Constraints or Bean Validation is a defense against bad data before it will persist in the DB
+-@Entity 
+  -a JPA annotation that means the POJO is an entity, will be mapped to a RDB
+-@Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+  -a JPA annotation that means this field is the primary key and also has an autoincrement
+-@Column(unique = true)
+  -a JPA unique constraint that means this column must be unique.
+-@Size(min = 5, max = 20, message = "This field can only be 5 or 20 in length")
+  -a JPA constraint that means it has a length of 5 in minimum and 20 in maximum, when a bad data is given, a message will return
+-@NotEmpty
+  -a JPA constraint that this field must not contain empty string
+-@NotNull
+  -a JPA constraint that this field must nut be null
+-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"name", "venue_id"}))
+  -a JPA constraint that this table has two or more fields that needs to be unique rather than annotating individually
+-@Embedded
+  -a JPA annotation that determines that this entity is not a full-pledged entity and is a composition of an entity, this means reusability and RDBM will not establish a relation in it composing entity
+-@Temporal(TIMESTAMP)
+  -a JPA annotation that is useful for Dates to compatibilize the Java Date datatype to thta of RDBM, we use timestamp to represent it
+-@JoinColumn
+-@LOB
+
+ADDING REST service/JAX-RS
+-SAMPLE:
+package org.jboss.examples.ticketmonster.rest;
+
+@Path("/events")
+@RequestScoped
+public class EventService {
+	@Inject
+	private EntityManager em;
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Event> getAllEvents() {
+		final List<Event> results =
+			em.createQuery(
+			"select e from Event e order by e.name").getResultList();
+		return results;
+	}
+}
+
+JPA RELATIONSHIPS(Some Examples)
+-ManyToOne
+  *SideNote
+   -There is no need for a media item to know who references it (in fact, this would be a poor design, as it would reduce the reusability of MediaItem), so we can leave this as a uni-directional relationship.
+-OneToMany(cascade = CascadeType.All, fetch = FetchType.EAGER, mappedBy = *this entity*)
+  -The <code>@OneToMany<code> JPA mapping establishes this relationship.
+     * Collection members are fetched eagerly, so that they can be accessed even after the
+     * entity has become detached. This relationship is bi-directional (a section knows which
+     * venue it is part of), and the <code>mappedBy</code> attribute establishes this. We
+     * cascade all persistence operations to the set of performances, so, for example if a venue
+     * is removed, then all of it's sections will also be removed.
+*SideNote(Address entity)
+  -In creating this(Venue) entity, we’ve followed all the design and implementation decisions previously discussed, with one new concept. Rather than add the properties for street, city, postal code etc. to this object, we’ve extracted them into the Address object, and included it in the Venue object using composition. This would allow us to reuse the Address object in other places (such as a customer’s address).
+A RDBMS doesn’t have a similar concept to composition, so we need to choose whether to represent the address as a separate entity, and create a relationship between the venue and the address, or whether to map the properties from Address to the table for the owning entity, in this case Venue. It doesn’t make much sense for an address to be a full entity - we’re not going to want to run queries against the address in isolation, nor do we want to be able to delete or update an address in isolation - in essence, the address doesn’t have a standalone identity outside of the object into which it is composed.
+To embed the Address into Venue we add the @Embeddable annotation to the Address class. However, unlike a full entity, there is no need to add an identifier. 
+  -@Embedded
+    -An embedded entity means it is a composition of an entity and DB will not create a seperate Table rather it is mapped to the Venue entity
+  -* <p>
+ * Addresses are used in many places in an application, so to observe the DRY principle, we model Address as an embeddable
+ * entity. An embeddable entity appears as a child in the object model, but no relationship is established in the RDBMS..
+ * </p>
+ */
+

@@ -1,0 +1,563 @@
+PRINCIPLES OFJAVA
+-simple object-oriented and familiar
+-robust and secure
+-architectural-neutral and portable
+-high performance
+-interpreted, threaded, and dynamic
+
+RUNTIME ARCHITECTURE
+-java is an interpreted language
+-compiles to bytecode instead of machine language
+-OS -> JVM -> Core runtime and lib ->bytecode
+
+JAVA EDITIONS
+-JAVA Standard Edition (JSE) - core
+-JAVA Enterprise Edition (JEE) - for industry
+-JAVA Micro Edition (ME) - microcontrollers mobile
+
+IDENTIFIER CONVENTIONS
+-classes start uppercase character
+  - class MyClass
+-methods and variable start w/ lowercase
+  - void doSomething(String withThis){}
+-Constants are all uppercase
+  -public static final String FIRSTNAME = "David";
+
+AUTO MEMORY MGMT
+-memory for obj is allocated automatically
+-obj are created in heap memory(not stack)
+-as long as any var refs an obj, it's retained not collected by garbg collector
+
+DEREFERENCE a VAR usign NULL
+-String tempVar = "Something";
+tempVar = null'
+
+TIPS for MANAGING MEMORY
+-minimize the numbers of obj u create
+-Runtime.maxMemory();
+-Runtime.totalMemory();
+
+SETTING SYSTEM ENVIRONMENT VAR
+-add JAVA_HOME with value of java jdk path
+-add Path with value of java jdk path and bin
+-test it on CLI environment if it will work
+-type java -version and javac - version
+
+RUNNING JAVA in CLI
+-compile the java class by entering javac Main.java
+-run it by entering java Main
+-create folders com->example->java->Main.java
+-in root folder run javac com/example/java/Main.java
+-run it by entering com.example.java.Main
+
+PRIMITIVE DATA TYPE
+-numbers, char, bools
+-stored in fastest available mem
+-prim data type names are all lowercase
+-not a prim is STRING
+-Java is satically-typed language
+   -all vars must have their types declared unlike js or php
+
+PRECISION IN DOUBLE AND DECIMAL
+-sample code:
+double value = 0.012;
+doube pSum = value + value + value; // 0.036000000004
+
+-use helper class Double and store it in string to resolve the issue of precision:
+String strVal = Double.toString(value); //0.
+
+-then wrap it in complex object called BigDecimal:
+BigDecimal bigVal = new BigDecimal(strVal);
+BigDecimal bSum = bigVal.add(bigVal).add(bigVal); // 0.036
+
+CONVERTING NUMERICAL VALS
+-example, converting from lower memory data type(int) to larger(long), it is called widening the type. The reverse is narrowing the type.
+-casting must be compatible with the range of the data type or else will return 0.
+
+WORKING WITH BOOLEANS
+-the casting of String data type to Boolean by using Boolean helper class:
+String strVal = "true";
+boolean parsed = Boolean.parseBoolean(strVal);
+
+RULES OF OPERATOR
+-Types of Operators
+  - Equality
+  - Assignment
+  - Mathematical
+  - Logical
+
+POSTFIX VS PREFIX
+-int val = 10;
+ val ++; // evaluate then do the math
+ ++ val; // do the math then evaluate
+
+EXTRA COMPARING VALUES
+-isntanceof
+  - checking if an instance is member of a class
+-sampel code:
+String s = "Hello";
+if(s instaceof java.lang.String){
+  System.out.println("s is a String");
+}
+
+COMPARING STRINGS
+-dont use == or != comparing strings but use String.equals method
+-sample code:
+String s1 = "hello"; String s2 = "hello";
+if(s1.equals(s2)){ //some code }
+
+CLASS DEFINE OBJECTS
+-an object is an instance of a class
+-non-prim vars of class are ref to obj
+3 thing about instance
+1. Instantiation
+2. Instance Variable
+3. Instance Method
+
+CHARACTERISTIC OF STRINGS
+-a string is an array of characters
+-strings are immutable
+-resetting string value of a string creates new obj
+
+CONVERT STRING TO ARR OF CHAR
+-char [] charArr = str.toCharArr();
+
+LONG TO STRING WITH FORMAT
+-sample code:
+long longvalue = 10_000_000;
+NumberFormat formatter = NumberFormat.getNumberInstance();
+String formatted = formatter.format(longvalue);
+
+STRINGBUILDER
+-use this object will reduce memory problem 
+-StringBuilder sb = new StringBuilder("Hello");
+-use stringbuilder.append();
+
+STRINGBUILDER-SCANNER-RUNTIME
+-Scanner scanner = new Scanner(System.in);
+  StringBuilder sb = new StringBuilder("Hello");
+  sb.delete(0, sb.length());
+  for(int i = 0; i < 3; i++){ 
+     input = scanner.nextLine(); 
+     sb.append(input);
+}
+
+DONT FORGET USE EQUALS METHOD FOR
+COMPARING STRING VALUES! THEYRE OBJ
+
+USE NUMBERFORMAT FOR THE OBVIOUS REASON!
+-NumberFormat formatter = NumberFormat.getNumberInstance(locale);
+
+STRING METHODS
+-str.indexOf(); // returns index pos of a string
+-str.substring(); returns the string in a given index
+-str.trim(); // returns a string whitespace-free
+
+DATETIME API
+-Old API
+  -GregorianCalendar
+  -DateFormat
+-New API
+  -LocalDateTime
+  -LocalDate
+  -DateTimeFormatter
+
+DEBUGGING IN JAVA IDE
+-Put breakpoints
+-click stepover to go line-by-line
+-add vars to Watches to monitor value changes
+
+-you can also add breakpoint conditions by right-clicking on it
+-then click resume program
+
+TRY-CATCH
+-anticipate every exception that your code might generate
+-sample code:
+String welcome = "Welcome!";
+char[] chars = welcome.toCharArray();
+try{
+  char.lastChar = chars[chars.length]; // this will generate exception
+  System.out.println(lastChar);
+} catch(ArrayIndexOutOfBoundsException e){
+  //e.printStackTrace();
+  System.out.println("Array index problem!");
+}
+
+-add custom exception and explictly state it
+-sample code:
+try{
+  if(chars.length > 10){
+    throw(new Exception("my custom message!")); // add a catch block otherwise it will generate error
+  }
+
+  char.lastChar = chars[chars.length]; // this will generate exception
+  System.out.println(lastChar);
+} catch(ArrayIndexOutOfBoundsException e){
+  //e.printStackTrace();
+  System.out.println("Array index problem!");
+}catch(Exception e){
+  e.getmessage; // get the custom message
+}
+
+OTHER EXCEPTION INFO
+-two types of throwable: ERROR and EXCEPTION
+-two types of Exception: CHECKED and UNCHECKED
+
+EXTRA METHOD DEFINITION, MANY ARGS
+-public static double addValues(String ... values){
+  double result = 0;
+  for(String value: values){
+     double d = Double.parseDouble(value);
+     result += d;
+  }
+   return result;
+}
+
+PASSING byREF or byVAL in METHODS
+-by reference, is the original value
+-by copy, is creating a copy of the original
+3 Examples of passing
+-Primitive types, sample code:
+void incrementVal(int inMethod){
+  inMethod[0]++;
+  sout(inMethod);
+}
+int original = 10;
+sout(original); // 10
+incrementVal(original); //11
+sout(original); // 10
+
+-array, sample code:
+void incrementVal(int[] inMethod){
+  inMethod[0]++;
+  sout(inMethod);
+}
+int[] arOrig = {10, 20, 30};
+sout(arOrig[0]); // 10
+incrementVal(arOrig); //11
+sout(arOrig[0]); // 11 changed because it is ref
+
+-string, sample code:
+void changeStr(int inMethod){
+  inMethod = "New!";
+  sout(inMethod);
+}
+String orig = "orig";
+sout(orig); //orig
+changeStr(orig); //New!
+sout(orig);//orig didnt change because string r immutable
+
+ARRAY IN JAVA
+-arrays size or length is not changeable
+ -defining array:
+   int[] ints = {1, 2, 3}; 
+-method for sorting array
+  -Primitive
+     -int[] ints = {1, 2, 3}; 
+       Array.sort(ints); // sorts lowest to highest
+  -String
+    -String[] strings = {"Red", "Blue", "Green"};
+      Array.sort(strings); //sorts alphabetical
+
+-Setting an initial size:
+int[] sized = new int[10]; // in default values
+
+-copying array:
+int[] copied = new int[5];
+System.arraycopy(sized, 5, copied, 0, 5);
+//orig arr, beginInd of orig, dest arr, beginInd, endInd
+
+TWO-DIMENSIONAL ARRAY
+-defining two dimensional array:
+String[][] states = new String[3][2];
+
+JAVA COLLECTIONS
+-Set
+-List
+-Deque
+-Map
+
+LIST COLLECTION OBJECT (ORDERED)
+-defining List:
+List<String> list = new ArrayList<>();
+//resizeable array
+
+-List add method:
+list.add("California");
+list.add("Oregon");
+list.add("Washington");
+sout(list);// [California, Oregon, Washington]
+
+-List remove method:
+list.remove(0); //[Oregon, Washington]
+
+-accesing item in list:
+String state = list.get(1); // Washington
+
+-find an item in list:
+int pos = list.indexOf("Oregon"); // 0
+
+HASHMAP COLLECTION OBJECT (UNORDERED)
+-define hashmap:
+Map<String, String> map = new HashMap<>();
+//key value pair: K for key, V for value
+
+-map put method:
+map.put("California", "Scramento");
+map.put("Oregon", "Salem");
+map.put("Washington", "Olympia");
+sout(map); // {Oregon=Salem, California=Sacramento, Washington=Olympia}
+
+-map get method:
+String cap = mag.get("Oregon"); // Salem
+
+-map remove method:
+map.remove("California"); //  {Oregon=Salem, Washington=Olympia}
+
+COLLECTIONS ITERATOR OBJ
+-define iterator object:
+Iterator<String> iterator = list.iterator();
+
+-iterator iterate method:
+while(iterator.hasNext()){ // while there is an item next
+  String value = iterator.next(); //evaluate the item then move to next
+  sout(value);
+}
+
+-Java 8 method reference:
+list.forEach(System.out::println()); //best in performance and code
+
+-HashMap Iterator:
+Set<String> keys = map.keySet();
+Iterator<String> iterator = map.iterator();
+while(iterator.hasNext()){
+  String value = iterator.next();
+  sout(value);
+}
+
+-HashMap ForEach:
+for(String key : keys){
+  String value = map.get(key);
+  sout(value);
+}
+
+JAVA OBJECT-ORIENTED PROGRAMMING
+
+ENCAPSULATION
+  -hides the complexity
+  -restrict data from other user
+  -breaking functionality into small and maintanable units
+  -grouping functions and data together
+
+GETTER & SETTER
+-accessor is getter must be method
+-modifier is setter must be method
+
+ENUMS or ENUMERATION
+-this will standardized values so mispells in string literals can be avoided
+-also, it will ease the code
+-if theres only some set of value
+
+INHERITANCE
+-relationship between multiple classes
+-java supports single inheritance
+-each class extends only one direct sueprclass
+-inheritance relationship can be described as
+  -parent/child
+  -base/derived
+  -superclass/subclass
+
+POLYMORPHISM
+-addresses an obj as either super- or subtype
+-writes methods that accepts supertype as args
+-passes insttances as sutypes
+-increase code flexibility and reusability
+
+SUPERCLASS
+-superclass dont need special code
+-if a class isnt FINAL, it can be extended
+-all fields and method are inherited unless marked private
+-mark fields public/private then make getter/setter
+
+REFACTORED ADD IN ARRAYLIST
+-sample code:
+List<String> olives = new ArrayList<>();
+olives.add(new Olive("Kalamata", Black, 3));
+
+ENUMS
+-sample code:
+public enum OliveName{
+  KALAMATA("Kalamata"), LIGURIAN("Ligurian");
+  public String name;
+  OliveName(String name){
+    this.name = name;
+  }
+  @override
+  public toString(){
+   return name;
+  }
+}
+
+INTERFACE
+-is a contract like relationship
+-sample code:
+List<Olive> olives = new ArrayList<>();
+Press press = new OlivePress();
+-this guarantees that the instance has the methods of List or Press
+
+CREATING AND REFACTORING CODES
+-create a model class within a new package
+-create a processing class
+-create the instances in the main method, put it in arraylist and process the instances with process class
+-encapsulate field members of model class by marking it private
+-make setter and getter for the fields
+-make a  constrocutor for the model class to initialize field members
+-if field member values are limited to some, then make enums of it
+-if there are clearer distinction, then make a distinct classes for each
+-since it inherited its parent's members, make a constructor and call superclass constructor and put the arguments to change the current class' members' values
+-make an interface to the processing class
+-implemenst the interface to the processign class
+-add abstract to the main model to have a contract relationship to subclasses
+
+JAVA FILE IO
+-how to create a copy of an existing file
+-pseudocode:
+1. create string pointing the file
+2. pointing to the path of the file
+3. create try-catch
+4. put the closable class to try parenthesis
+5. put a while statement upon reading
+6. define a general exception e
+
+3 Class to use on IO
+-FileReader
+-BufferedReader 
+-FileWriter
+
+TRY WITH RESOURCES
+-sample code:
+try(
+ // your resources here
+){ //some code here }
+-put in the parenthesis the implementations that needs to be closed like the 3 IO class
+
+-sample code:
+String source = "loremipsum.txt";
+String target = "target.txt";
+FileReader fReader = new FileReader(source);
+BufferedReader bReader = new BufferedReader(fReader);
+FileWriter fWriter = new FileWriter(target);
+
+HOW TO READ FILE
+-sample code:
+while(true){
+  String line = bReader.readLine();
+  if(line == null){
+    break(); // when no more line stop the loop
+  }else{
+    fWriter.write(line + "\n"); // add lien to target file
+  }
+}
+
+NEW JAVA FILE IO
+-Path Class
+  - handles the paths of the files
+  - dont have to  worry the slash separator
+  -sample code:
+    Path source = Paths.get("files", "loremipsumt.txt");
+    Path targ = Paths.get("files", "target.txt");
+
+-File Class
+  -dont have to bother create the 3 IO class
+  -copy method:
+    -sample code:
+      Files.copy(source, targ, StandardCopyOption.REPLACE_EXISTING);
+
+ADDING LIB ON UR PROJ
+-download the jar file
+-put in the root folder
+-right-click and select add library
+
+READING A FILE IN INTERNET
+-create a final String for the url
+-instantiate URL class and put on constructor par the url
+-create InputStream and BufferedStream
+-then read the text on file
+-sample code:
+while(true){
+                int data = buf.read();
+                if (data == -1){
+                    break;
+                }else{
+                    sb.append((char)data);
+                }
+            }
+
+JAVADOC
+-this automatically generates a webpage document for your project
+-use /** to initialize javadoc
+-go to tools tab and select Generate JavaDoc
+
+JAVA JAR
+-to compress the project to a jar file and run it anywhere
+-click file tab, Proj Structure, Artifcats, add
+-indicate the main class, leave anythign default
+-check Build on Make to regenrate the jar file upon Build of project
+-click Build tab
+-then click build artifacts
+-the output will be on out directory
+
+------ADVANCE JAVA------
+
+STATIC AND FIELD INITIALIZERS
+-it is called before the constructor
+-even initializer block of code called first before constructor
+-static initializers are called the first time it is referenced
+-it is called once because it is a static
+-are great for init the values of complex obj or wherever u need to evaluate current state before assigning one and only vlaue to static obj
+-sample code:
+public static ArrayList<Olive> olives;
+static{
+  olives = new ArrayList<>();
+  olives.add(new Olive("Kalamata", 0x000000));
+  olives.add(new Olive("Picholine", 0x00FF00));
+  olives.add(new Olive("Kalamata", 0x000000));
+}
+-handy when there are many constructor version and you liek to initialize some fields no matter what constructor is called
+
+MEMBER CLASSES
+-if you want a class to be used only by a specific class
+-to encapsulate or hide a class and be relevant and exclusive only for a specific class
+
+LOCAL INNER CLASSES
+-define it inside a method, instantiate it as well in there
+-way of creatign complex but kept hidden from the rest of the application
+
+ANONYMOUS LOCAL INNER CLASSES
+-the same with local inner classes, local to a particular method, define within adn that class only available within the code blick which it is defined
+
+REFLECTION API
+-contains classes and methods
+-for dynamic apps
+-handling process when you dont know the name of classes
+-useful to get information on a class
+-sample code:
+Olive o = new Olive();
+Class<?> c = o.getClass();
+c.getName(); // returns class - package - className
+c.getSimpleName();// returns class name
+
+-Instantiating class dynamically
+-sample code:
+Constructor<?>[] cons = c.getConstructor();
+Constructor<?> con = cons[0];
+Object obj = null;
+try{
+  obj = con.newInstance(OliveName.KALAMATA, OliveColor.Color.BLACK);
+} catch(Exception e){ e.getMessage(); }
+
+NAVIGATING INHERITANCE TREES
+-sample code:
+Class<?> sup = o.getSuperClass();
+Class<?> top = sup.getSuperClass();
+Package p = o.getPackage();

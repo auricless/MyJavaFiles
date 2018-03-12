@@ -1,0 +1,23 @@
+1. Everything is an object
+2. A program is a bunch of objects telling each other what to do by sending messages
+3. Each objects has its own memory made up of other objects
+4. Every object has a type
+5. All objects of a particular type can recieve the same message
+
+CHAPTER 1
+1. An Object has an interface
+
+2. An Object provides services
+-A way to start doing this is to ask, “If I could magically pull them out of a hat, what objects would solve my problem right away?”
+-High cohesion or cohesiveness
+
+3. The hidden implementation
+-Why? Because if it’s hidden, the client programmer can’t access it, which means that the class creator can change the hidden portion at will without worrying about the impact on anyone else. The hidden portion usually represents the tender insides of an object that could easily be corrupted by a careless or uninformed client programmer, so hiding the implementation reduces program bugs.
+
+4. Reusing the implementation
+-composition
+- has-a relationship
+
+5. Inheritance
+
+6. Is-a vs. Is-like-a relationship
