@@ -64,4 +64,13 @@ TEXTUAL ANALYSIS
 NOUNS AND VERBS
 -Nouns are usually Classes and verbs are methods. You also need to determine if a noun is an external one or an actor
 
-PG. 178
+ABSTRACT CLASSES
+-Whenever you find common behavior in two or more places, look to abstract that behavior into a class, and then reuse that behavior in
+the common classes.
+
+OO PRINCIPLES
+-Encapsulate what varies
+-Code to an interface rather than to an implementation
+-Each class in your application should have only one reason to change
+
+PG. 267

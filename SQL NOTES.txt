@@ -15,3 +15,22 @@ ALTER TABLE - modifies a table
 DROP TABLE - deletes a table
 CREATE INDEX - creates an index (search key)
 DROP INDEX - deletes an index
+
+IS NULL - checks if a record column is null, located after WHERE clause
+NOT NULL - checks if a record column is not null, located after WHERE clause
+
+LIMIT - limits the number of selected records, MySQL, after condition
+TOP - limits the number of selected records, MSSQL, after condition
+
+MIN() - function returns the smallest value of the selected column
+MAX() - function returns the largest value of the selected column
+
+=====JOINS=====
+INNER JOIN ON
+LEFT JOIN ON
+RIGHT JOIN ON
+
+SELECT Table1.ID, Table2.Name, Table1.Date
+FROM Table1
+INNER JOIN Table2 ON Table1.Table2Id = Table2.ID
+
