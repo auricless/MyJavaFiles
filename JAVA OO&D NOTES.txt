@@ -1,0 +1,67 @@
+=====JAVA OOA&D NOTES====
+
+STEP1.
+- Make sure your software does what the customer wants it to do
+STEP2.
+- Apply basic OO principles to add flexibility
+STEP3.
+- Strive for a maintanable, reusable design
+
+CREATE A REQUIREMENTS LIST
+-list down what the customers want their system do
+
+CREATE A USE CASE
+-create a step by step procedure on what a SPECIFIC task a system do
+-describes your system does to accomplish a particular customer goal
+  -DETERMINE:
+    -External initiator
+    -Use Case
+    -Start Condition
+    -Requirement
+    -Stop Condition
+    -Main Path
+
+MAIN PATH & ALTERNATE PATH
+-main path is the main workflow of the system
+-alternate path is where problems occured
+
+USE CASE FORMAT EXAMPLE:
+-John and Tex's DogDoor
+ Primary Actor: Tex
+ Secondary Actor: John 
+ Preconditions: The dog door is open for Text to go outside
+ Goal: Text uses the bathroom and comes back inside, without getting mud inside the house
+
+-Main Path
+ 1. Tex goes outside
+ 2. the dog door closes automatically
+ 3. tex does his business
+ 4. John presses a button
+ 5. the dog door opens
+ 6. Tex comes back inside
+ 7. the door closes automatically
+
+-Extensions
+ 3.1 Tex gets muddy
+ 3.2 john cleans tex up
+
+REWRITING USE CASE
+-when the use cas is getting compelx and confusing you can always rewrite it and if there many subpaths, you can make two columns for a single use case. One is main path, one is Alternate path. 
+
+SCENARIO
+-scenario is steps from start to finish
+-there can be different scenarios
+
+ANALYSIS AND DESIGN WORKFLOW SO FAR
+Step1. Gather the customer's requirements
+Step2. Write a Use Case
+Step 3. Write the code
+Step4. If customer demands a change, back to Step1
+
+TEXTUAL ANALYSIS
+-is a quick and easy way to figure ou the classes in your system
+
+NOUNS AND VERBS
+-Nouns are usually Classes and verbs are methods. You also need to determine if a noun is an external one or an actor
+
+PG. 178

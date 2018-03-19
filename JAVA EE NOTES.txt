@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 =====JAVA EE INTRODUCTION=====
 
 JSF(JAVA SERVER FACES)
@@ -146,3 +147,466 @@ Client clicent = ClientBuilder.newClient();
 String name = client.target(http://localhost:8080/cargo-tracket-rest/cargo");
                     .request(MediaType.APPLICATION_JSON)
                     .get(String.class);
+=======
+=====JPA NOTES=====
+JAVA PERSISTENCE API
+
+-ENTITY
+ -abstract models so that you dont have to deal with databse directly
+ -represents table in RDB
+ -each instance correspond to a row in a table(records)
+ -noargs constructor, so that java enterprise container(like application context) instantiate when recreating  (deserializing)
+ -class shouldnt be final, nor methods and persistent fields
+ -inheritance works with entity and non-entity class
+
+-ENTITY EXAMPLE:
+
+//Start
+@Entity
+public class Person implements Serializable{
+ private static final long serialVersionUID = 1L;
+ 
+ @Id
+ @GeneratedValue(strategy = GenerationType.AUTO)
+ private Long id;
+
+ @NotNull
+ protected String firstName;
+ 
+ @NotNull
+ protected String lastName;
+
+ public String getFirstName(){
+  return firstName;
+ }
+
+ public String getLastName(){
+  return lastName;
+ }
+
+ public void setFirstName(String firstName){
+  this.firstName;
+ } 
+
+ public void setLastName(String firstName){
+  this.lastName;
+ }
+ 
+}
+//End
+
+-RELATIONSHIPS
+ -OneToOne
+ -OneToMany
+ -ManyToOne
+ -ManyToMany
+
+-DIRECTION IN RELATIONSHIPS
+ -SIDES
+  -Owning side
+   -entity tables has foreign key column ref
+  -Inverse side
+   -entity table on the other side
+
+ -Relationships are either bidirectional or   unidirectional
+  -Bidirectional
+   -has both owning side and inverse side
+  -Unidirectional
+   -has owning side only
+
+-RELATIONAL EXAMPLE
+//Start
+ 
+ @NotNull
+ @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+ private Contact adminContact;
+
+ @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+ private Contact billingContact;
+
+ @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+ private NoteSettings noteSettings;
+
+ @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+ @Where(clause = "deleted='false'")
+ @BatchSize(size = 10)
+ private Set<Salesperson> salespeople = new LinkedHashSet<Salesperson>();
+
+ @OneToOne(mappedBy = "account", fetch = fetchType.LAZY, cascade = Cascade.ALL)
+ private Team team;
+
+//END
+
+-EAGER vs LAZY FETCH
+ -eager fetches the relational entity/ies in a particular entity as it instantiate
+  -caution: you might have a chanin of eager getch that simultaneously query, result to unoptimized performance
+ -lazy however, doesnt fetch it but let the user do it himself through accessing it
+  -caution: might cause lazy initialization exception if are not accessed once in jsf layer
+
+-MAPPED SUPERCLASS
+ -entity inheritance
+
+-ENTITY MANAGER
+ -creates/removes entity instances
+ -finds entities by the entity's primary key
+ -allows queries to be run on entities
+ 
+ -ENTITY MANAGER SAMPLE:
+ 
+  //Start
+  @PersistenceContext
+  EntityManager em;
+  public void enterOrder(int custID, Order newOrder){
+    Customer cust = em.find(Customer.class, custID);
+    cust.getOrders().add(newOrder);
+    newOrder.setCustomer(cust);
+  }
+  //End
+
+  //Start
+  @PersistentContext
+  EntityManager em;
+  ...
+  public LineItem createLineItem(Order order, Product product, int quantity){
+    LineItem li = new LineItem(order, product, quantity);
+    order.getLineItems().add(li);
+    em.persist(li);
+    return li;
+  }
+  //End
+
+-NAMED QUERIES(JPQL and HQL)
+ -SAMPLE: 
+   @NamedQueries({ 
+     @NamedQuery(name = "Settings.getAll", query = "select s from Settings s"),
+     @NamedQuery(name = "Settings.countAll", query = "select count(s) from settings s"),
+     @NamedQuery(name = "Settings.get", query = "select s from Settings s ")
+                    + "left join fetch s.createdBy " + "where s.id = :id"),
+     @NamedQuery(name = "Settings.getByAccount", query = "select a.settings from Account a " 
+                    + "where a = :account")
+   })
+
+-STORED PROCEDURE MAPPING
+ -SAMPLE: *to be written soon*
+
+
+
+=====EJB NOTES=====
+ENTERPRISE JAVABEANS
+
+-serverside software that encapsulates application business logic
+-business logic layer
+-controller layer
+
+-EJB(available to use)
+ -Transcation processing
+ -Concurrency control
+ -JPA Integration
+ -Eventdriven programming
+ -Asynchronous method invocation
+ -Job Scheduling
+ -Naming and directory services(JNDI)
+ -Interprocess communication
+ -security encryption(JCE), authentication(JAAS)
+
+-"the point of java enterprise mainly is to allow you to build enterprise app without writing the boilerplate code"
+
+-BEAN
+ -noargs constructor
+ -private fields
+ -accessors methods/getter and setters
+
+-EJB BEAN KIND
+ -Session Bean
+  -perform a task for client, client means another applciation that interfacing your application
+  -performs a task for a client; optionally, may implement a web service
+ -Messagedriven Bean
+  -acts as a listener for a particular messaging type, such as the Java Message Service API
+
+-STATELESS BEAN SAMPLE:
+ 
+ //Start
+ //Stateless EJB
+ @Stateless 
+ public class CalculatorService{
+  public int add(int a. int b){
+    return a + b;
+  }
+  ...
+ }
+ //End
+
+ //Start
+ //Injected in CDI Bean in Web Layer(JSF)
+ @Named
+ @ViewScoped
+ public class Calculator implements Serializable{
+  @EJB
+  private CalculatorService calculatorService;
+
+  private int number1;
+  private int number2;
+  private int result;
+  
+  public void add(){
+   int result = calculatorService.add(number1, number2);
+  }
+
+  public int getNumber1(){
+   return number1;
+  }
+
+  public int getNumber2(){
+   return number2;
+  }
+
+}
+
+-STATEFUL BEAN SAMPLE
+ //Start
+ @Stateful
+ public class CartBean implements Cart{
+  @PersistenceContext(unitName = "pu", type = PersistenceContextType.EXTENDED)
+  private EntityManager entityManager;
+
+  private List products;
+ 
+  @PostConstruct
+  private void initialize(){
+   products = new ArrayList<>();
+  }
+
+  @Override
+  public void addProductToCart(Product product){
+   p[roducts.add(product);
+  }
+
+  @Override
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void checkOut(){
+    for(Product product: products){
+      entityManager.persist(product)
+    }
+     products.clear();
+  }
+ }
+
+-SINGLETON BEAN
+-MESSAGEDRIVEN BEAN
+-LOCAL AND REMOTE INTERFACES
+-SCHEDULED JOB
+
+=====JSF NOTES=====
+-official Java EE web framework specification for building component-based user interface for web applications
+
+-JSF(available to use)
+ -Componentdriven UI design model
+ -facelets XML files, view tempaltes, facelets views
+ -component tree
+ -Request life cycle
+ -events
+ -rendering page
+ -state saving serverside, clientside
+ -AJAX
+ -Graceful degradation for javascript-disabled browsers
+
+-COMPONENT LIB
+ -Apache MyFaces
+ -backbase Enterprise Ajax(jsf edition)
+ -ICEfaces
+ -Java BluePrints(Sun)
+ -OmniFaces(util lib)
+ -Oracle ADF Faces Rich CLient
+ -Primefaces
+ -RichFaces(JBoss)
+ -XPages(IBM Notes)
+ -ZK
+
+-IMPLEMENTATIONS(spec)
+ -Mojarra(Oracle)
+ -Apache MyFaces
+
+-HELLO WORLD MANAGED BEAN
+ -SAMPLE:
+
+ //Start
+ @ManagedBean
+ @SessionScoped
+ public class Hellobean implements Serializable{
+  private static final long serialVersionUID = 1L;
+  private String name;
+  private String getName(){
+   return name;
+  }
+  private void setName(String name){
+   this.name = name;
+  }
+ }
+ //End
+
+-HELLO WORLD HELLO.XHTML
+ -SAMPLE:
+
+ <!--Start-->
+ <h:form>
+  <h:inputText value="#{helloBean.name}"></h:inputText>
+  <h:commandButton value="Welcome Me" action="welcome"></h:commandButton>
+ </h:form>
+ <!--End-->
+
+-HELLO WORLD WELCOME.XHTML
+ -SAMPLE:
+ 
+ <!--Start-->
+ <h:body bgcolor="white">
+ <h2>JSF 2.0 Hello World Example - welcome.xhtml</h2>
+ <h2>Welcome #{helloBean.name}</h2>
+ </h:body>
+ <!--End-->
+
+-BEAN SCOPES
+ -Application
+   -bean will be destroyed once app shutdown
+ -Session
+   -user login(not necessarily), java server will keep track of session. WIll live as long there is session, destroyed once session timeout
+ -View
+   -bean alive as long as your on specific page, once away on a page it will be destroyed
+ -Request
+   -one request, once done with the request it will be destroyed
+
+"You can use CDI(which is newer) annotations and JSF annotations interchangeable"
+
+-LIFE CYCLE
+-EXPRESSION LANGUAGE
+  -ne means not-equal-to
+  -gt is greater-than
+  -SAMPLE:
+   
+  <!--Start--> 
+  <p:columnGroup type="header">
+    <p:column rendered="#{cc.attrs.model.revision.type ne 'CRM_MODIFICATION'}" styleClass="ncd-col-num" />
+    <p:column rendered="#{cc.attrs.model.revision.type} ne 'CRM_MODIFICATION' and cc.attrs.model.revision.type ne 'FOLLOW_UP' and cc.attrs.model.oneOnOneCount gt 0" styleClass="ncd-col-partial">
+      <f:facet name="header">
+        <p:selectBooleanCheckBox value="true" widgetVar="allNoteContactsChkbox" onchange="onAllNoteContactsChange">
+      </f:facet>
+    </p:column>
+  <!--End-->
+
+-CLIENTSIDE EVENTS
+  -ajax listener
+-COMPOSITE COMPONENT
+-TEMPLATE
+
+"right tool for the right job"
+
+=====CDI NOTES=====
+-Contexts and Dependency Injection
+-feature that knits together the WEB tier(JSF, REST) and the TRANSACTIONAL tier(EJB) of the JAVA EE platform
+-makes it easy for developers to use enterprise beans with JSF
+-broader uses: flexibility to integrate various components in a LOOSELY COUPLED but TYPESAFE way
+  -TYPESAFE means you broaden your types
+  -TIGHTLY COUPLED means you depend your app very tightly
+  -LOOSELY COUPLED 
+
+-CONTEXTS
+  -Context manages beans along with their respective scopes and responsible for keeping them alive in application container and instantiates or destroys it once needed.
+  -bind lifecycle and interactions of stateful components to well-defined, extensible lifecycle contexts
+  -example: Declaring a bean class to be @RequestScoped
+
+@Named means it is visible in the expression language in the JSF xml
+
+-DEPENDENCY INJECTION
+  -injects components or resources into other components in a typesafe way by (optionally) choosing which implementation of an interface to inject
+
+-@INJECT FILTERS SAMPLE:
+  //Start
+  @Named
+  @ViewScoped
+  public class Filters implements Map<String, Object>, Serializable{
+    private static final long serialVersionUID = 1L;
+    private Map<String, Object> map = new HashTable<String, Object>();
+    @Override
+    public void clear(){
+      map.clear;
+    }
+  }
+  //End
+
+  //Start
+  @Named
+  @ViewScoped
+  public class CustomerDataReportView implements Serializable{
+    ...
+    private List<SelectItem> fieldItems;
+    private Set<String> fields = new hashSet<String>();
+    @Inject
+    private Filters filters;
+    @Inject
+    private MeetingTypeSettingsView meetingTypeSettingsView;
+    ...
+  }
+  //End
+
+-Other Features
+ -Expression Language(EL)
+ -Decorate Injected Components
+ -Interceptors
+ -EventNotification model
+ -Service provider Interface(SPI)
+
+-EJB, JSF, CDI
+ -@ManagedBean vs. @Named
+ -@EJB vs @Inject
+
+-BEAN SCOPES(CDI)
+ -Application
+ -Session
+ -View
+ -Request
+ -Conversation
+ -Dependent(default scope for CDI)
+
+-@QUALIFIER
+  -add @qualifier annotation in the class, in resource class add @produces, @sessionscoped, @userIdCache then in service class use @inject, @userIdCache
+  -stateless EJB is NOT FOR STORING
+
+
+-@PRODUCES AND @DISPOSES
+  -what produces can be disposes
+
+JPA CRUD SAMPLE:
+//create a database completely configured
+//init
+EntityManager em;
+EntityManagerFactory emf;
+emf = Persistence.createdEntityManagerFactory("JPA_CRUD");
+em = emf.createEntityManager();
+em.getTransaction().begin();
+
+//instantiate
+Employee e = new Employee();
+e.setId();
+e.setName("Aron");
+
+//create
+em.persist(e);
+em.getTransaction().commit();
+
+//read
+//named query is defined in the entity class
+List<Employee> list = em.createNamedQuery("Employee.findAll", Employee.class).getResultList();
+for(Employee ee : list){
+  sysout("Id: " + ee.getId());
+  sysout("Name: " + ee.getName());
+}
+
+//Update
+em.merge(e);
+em.getTransaction().commit();
+
+//Delete
+int idToDelete = 1;
+Employee e = em.find(Employee.class, idToDelete);
+em.remove(e);
+em.getTransaction().commit();
+>>>>>>> 62073d5ef0bcd595f639777eb7dede44eb3f643b
