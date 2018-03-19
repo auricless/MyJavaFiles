@@ -1,0 +1,148 @@
+=====JAVA EE INTRODUCTION=====
+
+JSF(JAVA SERVER FACES)
+-presentation layer
+-facelets view
+ -composite component, EL, tag language
+-EL binds CDI beans
+-composite components consist: validators and listeners
+-pluggable component libraries
+ -primefaces
+
+<ui:define> - defines composition tags
+<ui:composition> - used for templating and to be defined
+<p:autocomplete> - used an autocomplete input text, use completeMethod attribute's EL (ex: track.completeTracking)
+<p:commandButton> - used to submit forms, use actionListener attribute's EL (ex: track.onTrackByID)
+<h:panelgroup> - used rendered attributes to define condition if or not this tag will be rendered
+<p:selectOneMenu> - for dropdowns
+
+@ViewScoped
+-ensures that its lifecycle matches that of the view
+
+@Named("newName")
+-defines name in the view
+
+CDI(CONTECT & DEPENDENCY INJECTION)
+-glues layers together
+-all obj are injectable(comply with JSR299)
+-EJBs, JNDI resources, persistence unit and contexts
+
+Producer Methods
+@Produces
+public List<Book> availableBooks(){
+  return getListOfBookFromDatabase();
+}
+-this can be injectable
+-use @Inject
+-TODO: @Disposes, @Stereotype
+
+Expression Language Beans
+-beans that you want to be accesible in the EL
+-uses @Named
+
+@Inject
+-inject object in a typesafe way, By type and not by name
+-to reduce ambiguity, use @Qualifier method
+
+INTERCEPTORS AND DECORATORS
+EVENT
+-listens and fires event
+-@Observes
+
+@RequestScoped
+-its lifecycle matches that of http request, details should be fresh every load so requestscoped make sense rather than session, which is once instantiated in the whole user session
+
+@ApplicationScoped
+-its lifecycle matches that of whole application, usually, this are implementations of services
+
+EXPRESSION LANGUAGE(EL) SYNTAX
+- [], (), -, < = >, eq, ne, || and more
+- and, not, instanceof, true, mod and more
+example:
+#{not empty track.cargo}
+
+EJB3(Enterprise Java Bean)
+-convention over configuration
+-dependency injection
+-encapsulates business logic
+-container services
+  -thread safety
+  -run in single thread context
+  -transactional and pooling
+
+TWO TYPES OF EJB
+-Session Bean and Messagedriven Bean
+
+SESSION BEAN(Business Logic)
+-@Stateless, @Stateful, @Singleton
+
+THREE ACCESS MODES
+-local
+-remote
+-web service
+-Session:@Local, @Remote, @LocalBean, @WebService
+-Message Driven: @WebService
+
+@Startup
+-should be instatiated as soon as the application started
+
+@PostConstruct
+-this method executed as soon as the class's instantiated
+
+JPA Introduction
+-an ORM framework
+-Hibernate
+-Bean Validation
+
+DOMAIN MODELING
+-@Entity, @Id, @GeneratedValue, @Embedded
+-@OneToOne, @OneToMany, @ManyToOne, @ManyToMany
+
+RELATIONAL MAPPING
+-@Table, @Embeddable
+-@Column, @Enumerated, @Temperal, @Transient
+-@JoinColumn, @JoinTable
+
+ENTITYMANAGER CRUD API
+-@PersistenceContext, EntityManager, entutyManager
+-persist, find, merge, remove
+-flush, createNamedQuery
+
+DIVERSE QUERY FUNCTIONALITY
+-JPQL(Java Persistence query language)
+  -select c.trackingId from Cargo c
+-Criteria API
+  -EntityManager em = ...;
+    CriteriaBuilder cb = em.getCriteriaBuilder();
+    CriteriaQuery<Cargo> cq = em.getCriteriaBuilder().createQuery(Cargo.class);
+    cq.select(cq.from(Cargo.class));
+    List<Cargo> allCargos = em.createQuery(cq).getResultList();
+-Native queries
+-Stored procedures
+-DeltaSPike Query Module
+-Querydsl
+
+JAX-RS
+-define endpoints for external use or API
+-@POST, @GET, @PUT, @DELETE
+
+REST ENDPOINT
+-define base URI for all resources with @Application("rest")
+-retrieve URI path @Path("/cargo")
+-@Consumes and @Produces
+
+REQUEST PARAMETERS
+-@PathParam, @QueryParam, @DefaultValue
+
+CLIENT & SERVER RESTs
+-Server
+@Application("rest")
+@Path("/cargo")
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+
+-Client
+Client clicent = ClientBuilder.newClient();
+String name = client.target(http://localhost:8080/cargo-tracket-rest/cargo");
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(String.class);
