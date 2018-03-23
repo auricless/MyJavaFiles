@@ -72,5 +72,16 @@ OO PRINCIPLES
 -Encapsulate what varies
 -Code to an interface rather than to an implementation
 -Each class in your application should have only one reason to change
+-Classes are about behavior and functionality
 
-PG. 267
+Analysis and Design
+-Well-designed software is easy to change and extend
+-Use basic OO principle like encapsulation and inheritance to make your software more flexible
+-If a design isnt flexible, then CHANGE IT! Never settle on bad design, even if it's your bad design that has to change
+-Make sure each of your classes is cohesive: each of your classes should focus on doing ONE THING really well
+-ALways strive for higher cohesion as you move through your softwre's design life cycle
+
+"The goal of good design is highly cohesive coupled software"
+
+
+PG. 317
