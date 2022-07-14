@@ -39,3 +39,15 @@ A method f of a class C should only call the methods of these:
 Train Wrecks
 	- often called a train wreck because it look like a bunch of coupled train cars
 	- Chains of calls like this are generally considered to be sloppy style and should be avoided
+	
+DTO (Data Transfer Object)
+	- data structure with public variables that has no behaviors
+	- usually used for database communication and parsing data from sockets
+	- java bean is a special type of DTO that has getters and setter of private variables
+	
+	"In any given system we will sometimes want the flexibility to add new data types, and 
+	so we prefer objects for that part of the system. Other times we will want the flexibility to add new behaviors, 
+	and so in that part of the system we prefer data types and procedures."
+
+
+ERROR HANDLING:
