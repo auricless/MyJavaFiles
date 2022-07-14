@@ -51,3 +51,6 @@ DTO (Data Transfer Object)
 
 
 ERROR HANDLING:
+	- Error handling is important, but if it obscures logic, it’s wrong.
+Use Exceptions Rather Than Return Codes
+	- Use exceptions (try-catch) instead of just catching it with if-else so it seaprates the concer of logic and error-handling
