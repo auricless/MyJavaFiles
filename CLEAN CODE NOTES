@@ -54,3 +54,9 @@ ERROR HANDLING:
 	- Error handling is important, but if it obscures logic, it’s wrong.
 Use Exceptions Rather Than Return Codes
 	- Use exceptions (try-catch) instead of just catching it with if-else so it seaprates the concer of logic and error-handling
+Use Unchecked Exceptions
+	- Checked exceptions are usually a bad idea as they violates Open/Closed Principles; you must declare that exception in the 
+	signature of each method between you and the catch.
+Provide Context with Exceptions
+	- Create informative error messages and pass them along with your exceptions. Mention the operation that failed and the type of failure. 
+	If you are logging in your application, pass along enough information to be able to log the error in your catch.
