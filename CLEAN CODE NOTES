@@ -58,5 +58,16 @@ Use Unchecked Exceptions
 	- Checked exceptions are usually a bad idea as they violates Open/Closed Principles; you must declare that exception in the 
 	signature of each method between you and the catch.
 Provide Context with Exceptions
-	- Create informative error messages and pass them along with your exceptions. Mention the operation that failed and the type of failure. 
+	- Create informative error messages and pass them along with your exceptions. Mention the operation that failed and the type of failure. 
 	If you are logging in your application, pass along enough information to be able to log the error in your catch.
+Don't Return Null
+	- Too many null checkers on the whole codebase, it is easy to have a bug where NullPointerException is thrown and might be a application show-stopper
+Don't Pass Null
+	- Some methods might not be coding defensivle therefore null checks is possibly not present on that method there a NullPointerException might get thrown.
+	
+BOUNDARIES:
+Using Third-Party Code
+	- there's a conflicting goal wherein vendors tries to make their libraries very capable of many things to attract many users and user's goal 
+	is to consider using only what they specificaly need on third-party libraries.
+	- most of the time we wanted to encapsulate this third-party libraries to our custom class so we can interface only what we need and hide 
+	other unnecessary functions. Expose only those that meet the needs of the application.
